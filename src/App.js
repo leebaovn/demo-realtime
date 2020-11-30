@@ -2,70 +2,33 @@ import './App.css';
 import ColumnChart from './../src/ColumnChart';
 import firebase, { firestore } from './firebase';
 import React, { useEffect, useState } from 'react';
-const pairData = (arrData) => {
-  let arr = [];
-  arrData?.forEach((ans) => {
-    switch (ans) {
-      case 'A':
-        if (arr[0]) {
-          arr[0] += 1;
-        } else {
-          arr[0] = 1;
-        }
-        break;
-      case 'B':
-        if (arr[1]) {
-          arr[1] += 1;
-        } else {
-          arr[1] = 1;
-        }
-        break;
-      case 'C':
-        if (arr[2]) {
-          arr[2] += 1;
-        } else {
-          arr[2] = 1;
-        }
-        break;
-      case 'D':
-        if (arr[3]) {
-          arr[3] += 1;
-        } else {
-          arr[3] = 1;
-        }
-        break;
+import confetti from 'canvas-confetti';
+import fireworks from 'fireworks';
 
-      default:
-        break;
+const LIST_ANSWERS = ['A', 'B', 'C', 'D'];
+
+const pairData = (arrData) => {
+  let arr = {};
+  LIST_ANSWERS.forEach((ans) => {
+    arr[ans] = 0;
+  });
+  arrData?.forEach((ans) => {
+    if (LIST_ANSWERS.includes(ans)) {
+      arr[ans] = arr[ans] + 1;
     }
   });
-  arr[0] = arr[0] ?? 0;
-  arr[1] = arr[1] ?? 0;
-  arr[2] = arr[2] ?? 0;
-  arr[3] = arr[3] ?? 0;
   return arr;
+};
+const getLocation = (latestVote) => {
+  return ['40%', '30%'];
 };
 function App() {
   const roomRef = firestore.collection('room');
   const [data, setData] = useState([]);
-  // const getData = async () => {
-  //   const data = await roomRef.doc('1zFvzHq93RiczxRtrnPM').get();
-  //   return data.data().answers;
-  // };
+
   useEffect(() => {
     listenForVoting();
   }, []);
-  // roomRef.onSnapshot((snapshot) => {
-  //   console.log('imhere');
-  //   const docChanges = snapshot.docChanges().forEach((change) => {
-  //     if (change.type === 'modified') {
-  //       const newData = change.doc.data().answers;
-  //       const arrAns = pairData(newData);
-
-  //       setData(arrAns);
-  //     }
-  //   });
-  // });
 
   const listenForVoting = async () => {
     roomRef.onSnapshot(
@@ -74,6 +37,18 @@ function App() {
           const newData = change.doc.data().answers;
           const arrAns = pairData(newData);
           setData(arrAns);
+          const loc = getLocation(newData[newData.length - 1]);
+          fireworks({
+            x: loc[0],
+            y: loc[1],
+            colors: ['#cc3333', '#4CAF50', '#81C784'],
+          });
+
+          // confetti({
+          //   particleCount: 10,
+          //   spread: 10,
+          //   origin: { y: 0.6 }
+          // });
         });
       },
       (err) => console.log(err)
@@ -92,16 +67,17 @@ function App() {
   };
   return (
     <div className='App'>
-      <ColumnChart data={data} />
+      <ColumnChart data={data} label={LIST_ANSWERS} />
       <div
         style={{
           display: 'flex',
           justifyContent: 'space-between',
-          maxWidth: '90%',
           margin: 'auto',
+          width: '80%',
+          maxWidth: 600,
         }}
       >
-        {['A', 'B', 'C', 'D'].map((ans, ind) => (
+        {LIST_ANSWERS.map((ans, ind) => (
           <div
             key={ind}
             onClick={() => handleAns(ans)}

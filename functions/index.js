@@ -23,6 +23,31 @@ app.get('/questions', async (req, res) => {
   }
 });
 
+app.post('/createroom', async (req, res) => {
+  const { title, description } = req.body;
+  await db.collection('room').add({
+    title,
+    description,
+    members: [],
+    answers: [],
+    questions: [],
+  });
+  res.send(200).json({ data: 'Success' });
+});
 
+app.post('/answer/:roomId', async (req, res) => {
+  const roomId = req.params.roomId;
+  const { answer, username } = req.body;
+  const roomRef = await db.collection('room').doc(roomId).get();
+  if (roomRef.exists) {
+    const oldAns = roomRef.data().answers;
+    const newAns = [...oldAns, { answer, username }];
+    db.collection('room').doc(roomId).update({
+      answers: newAns,
+    });
+  } else {
+    res.send(404).json({ message: 'Room not found!' });
+  }
+});
 
 exports.api = functions.https.onRequest(app);
