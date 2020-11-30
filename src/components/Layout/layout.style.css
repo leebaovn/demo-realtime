@@ -1,0 +1,38 @@
+.container-header {
+  width: 100%;
+}
+
+.container-header .wrapper {
+  justify-content: center;
+  align-items: center;
+}
+
+.wrapper .logout {
+  margin-left: auto;
+
+  text-transform: uppercase;
+  font-weight: 500;
+
+  color: #ed1c3c;
+
+  padding: 8px 0;
+  cursor: pointer;
+
+  transition: all 0.5s;
+}
+
+.wrapper .logout:hover {
+  color: #751926;
+}
+
+.username {
+  text-transform: uppercase;
+  padding: 8px 0;
+}
+
+.content {
+  width: 100%;
+  height: auto;
+
+  background-color: #f1f1f1;
+}
