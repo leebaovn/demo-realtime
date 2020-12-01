@@ -15,11 +15,18 @@ function Header() {
       }
     })
   }, [])
+
+  const logout = () => {
+    firebase.auth().signOut()
+    localStorage.removeItem('@token')
+  }
   return (
     <div className='container-header'>
       <div className='wrapper'>
         <div className='username'>{username}</div>
-        <div className='logout'>Log out</div>
+        <div className='logout' onClick={logout}>
+          Log out
+        </div>
       </div>
     </div>
   )
