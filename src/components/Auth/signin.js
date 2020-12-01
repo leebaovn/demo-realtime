@@ -1,12 +1,42 @@
-import React from 'react'
-import './auth.style.css'
-import { Link } from 'react-router-dom'
+import React, { useRef } from 'react';
+import './auth.style.css';
+import { Link } from 'react-router-dom';
+import firebase, { auth } from './../../firebase';
 
-const handleSignup = (e) => {
-  e.preventDefault()
-}
-
-function signin() {
+function Signin() {
+  const emailRef = useRef('');
+  const pwdRef = useRef('');
+  const confirmpwdRef = useRef('');
+  const usernameRef = useRef('');
+  const handleSignup = async (e) => {
+    const { value: pwd } = pwdRef.current;
+    const { value: email } = emailRef.current;
+    const { value: confirmpwd } = confirmpwdRef.current;
+    const { value: username } = usernameRef.current;
+    e.preventDefault();
+    if (pwd !== confirmpwd) {
+      return;
+    }
+    let userRegister = null;
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, pwd)
+      .then(async (userCredential) => {
+        userCredential.user
+          .updateProfile({
+            displayName: username,
+          })
+          .then((data) => {
+            console.log(userCredential.user.displayName);
+          })
+          .catch((err) => {
+            console.log(err, 'err');
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <div className='container'>
       <div className='box'>
@@ -15,25 +45,25 @@ function signin() {
           <div className='form-field'>
             <div className='label'>Username</div>
             <div className='input'>
-              <input type='text' />
+              <input type='text' ref={usernameRef} />
             </div>
           </div>
           <div className='form-field'>
             <div className='label'>Email</div>
             <div className='input'>
-              <input type='email' />
+              <input type='email' ref={emailRef} />
             </div>
           </div>
           <div className='form-field'>
             <div className='label'>Password</div>
             <div className='input'>
-              <input type='password' />
+              <input type='password' ref={pwdRef} />
             </div>
           </div>
           <div className='form-field'>
             <div className='label'>Confirm password</div>
             <div className='input'>
-              <input type='password' />
+              <input type='password' ref={confirmpwdRef} />
             </div>
           </div>
           <div className='btn-section'>
@@ -45,7 +75,7 @@ function signin() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default signin
+export default Signin;
