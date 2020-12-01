@@ -1,11 +1,29 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import './auth.style.css'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
+import firebase, { auth } from './../../firebase'
 function Login() {
+  const history = useHistory()
   const emailRef = useRef('')
   const pwdRef = useRef('')
+
   const handleLogin = (e) => {
     e.preventDefault()
+  }
+
+  const handleGoogeLogin = async () => {
+    const provider = new firebase.auth.GoogleAuthProvider()
+    firebase
+      .auth()
+      .signInWithPopup(provider)
+      .then(async (result) => {
+        localStorage.setItem('@token', token)
+        var token = result.credential.accessToken
+        history.push('/')
+      })
+      .catch((error) => {
+        console.log(`Error on signing in`, error)
+      })
   }
   return (
     <div className='container'>
@@ -28,6 +46,9 @@ function Login() {
             <input type='submit' value='Login' className='btn btn-default' />
           </div>
         </form>
+        <button onClick={handleGoogeLogin} className='login-button'>
+          LOGIN with Googe
+        </button>
         <div className='text-direct'>
           Don't have an account ? <Link to='/signup'>Sign up now</Link>
         </div>

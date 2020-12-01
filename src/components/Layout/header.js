@@ -1,6 +1,20 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './layout.style.css'
-function Header({ username }) {
+import firebase, { auth } from './../../firebase'
+
+function Header() {
+  const [username, setUsername] = useState('')
+  const [photoUrl, setPhotoUrl] = useState('')
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        setPhotoUrl(user.photoURL)
+        setUsername(user.displayName)
+      } else {
+        console.log('not user')
+      }
+    })
+  }, [])
   return (
     <div className='container-header'>
       <div className='wrapper'>
