@@ -1,8 +1,7 @@
 const functions = require('firebase-functions')
-const admin = require('firebase-admin')
+const admin = require('./firebase')
 
 const cors = require('cors')
-const authMiddleware = require('./middlewares/auth.middleware')
 require('dotenv').config()
 
 const express = require('express')
@@ -11,7 +10,6 @@ const app = express()
 app.use(cors({ origin: '*' }))
 
 //middleware
-// app.use('/', authMiddleware)
 async function checkAuth(req, res, next) {
   const tokenBearer = req.get('Authorization')
   if (!tokenBearer) {
@@ -21,9 +19,9 @@ async function checkAuth(req, res, next) {
   if (token) {
     const decodedToken = await admin.auth().verifyIdToken(token)
     req.userId = decodedToken.uid
-    next()
+    return next()
   } else {
-    res.status(403).send('Unauthorized')
+    return res.status(403).send('Unauthorized')
   }
 }
 
@@ -31,8 +29,12 @@ app.use('/', checkAuth)
 //require router
 const roomRouter = require('./modules/room/room.router')
 const questionRouter = require('./modules/questions/question.router')
+const guestRouter = require('./modules/guest/guest.router')
+const answerRouter = require('./modules/answers/answer.router')
 //define route
 app.use('/room', roomRouter)
 app.use('/question', questionRouter)
+app.use('/guest', guestRouter)
+app.use('/answer', answerRouter)
 
 exports.api = functions.region('asia-northeast1').https.onRequest(app)

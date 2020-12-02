@@ -1,4 +1,4 @@
-const admin = require('firebase-admin')
+const admin = require('./../../firebase')
 const db = admin.firestore()
 
 exports.getQuestionByRoom = async (req, res) => {
@@ -22,19 +22,13 @@ exports.getQuestionByRoom = async (req, res) => {
 exports.showQuestion = async (req, res) => {
   const { id } = req.params
   const questionRef = db.collection('questions')
-  const quenstionFound = await questionRef.doc(id).get()
-  if (!quenstionFound.data()) {
+  const questionFound = await questionRef.doc(id).get()
+  if (!questionFound.data()) {
     return res.status(403).send('Question not found')
   }
-  questionRef.get().then((quesRef) => {
-    const batch = db.batch()
-    quesRef.docs.forEach((ques) => {
-      batch.update(ques.ref, { show: false })
-    })
-  })
-
+  const currentShow = questionFound.data().show
   await questionRef.doc(id).update({
-    show: true,
+    show: !currentShow,
   })
   return res.status(200)
 }

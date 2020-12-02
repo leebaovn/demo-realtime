@@ -78,6 +78,10 @@ function RoomDetail() {
     setEditingKey('')
   }
 
+  const show = async (id) => {
+    await axios.post(`/question/${id}`)
+  }
+
   const save = async (id) => {
     try {
       const row = await form.validateFields()
@@ -180,7 +184,7 @@ function RoomDetail() {
             >
               <DeleteOutlined />
             </Button>
-            <Button type='primary' size='small'>
+            <Button type='primary' size='small' onClick={() => show(record.id)}>
               Show
             </Button>
           </>
@@ -220,6 +224,7 @@ function RoomDetail() {
             }}
             dataSource={questions}
             columns={mergedColumns}
+            loading={loading}
             pagination={false}
             rowKey='id'
           />

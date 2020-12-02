@@ -1,34 +1,37 @@
-import React from 'react';
-import { Bar } from 'react-chartjs-2';
+import React from 'react'
+import { Bar } from 'react-chartjs-2'
 function ColumnChart({ label, data }) {
   return (
-    <div style={{
-      width: '80%', 
-      maxWidth: 600,
-      display: 'flex',
-      justifyContent: 'space-between',
-      margin: 'auto',
-      marginTop : 30,
-      marginBottom: 30
-      }}>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        margin: 'auto',
+        marginBottom: 30,
+      }}
+    >
       <Bar
         data={{
-          labels: Object.keys(data),
+          labels: label,
+          // labels: Object.keys(data),
           datasets: [
             {
               label: 'Total',
               backgroundColor: ['#3e95cd', '#8e5ea2', '#3cba9f', '#e8c3b9'],
-              data: Object.keys(data).map(key => data[key])
+              data: data,
+              // data: Object.keys(data).map((key) => data[key]),
             },
           ],
         }}
         options={{
           scales: {
-            yAxes: [{
+            yAxes: [
+              {
                 ticks: {
-                    beginAtZero: true
-                }
-            }]
+                  beginAtZero: true,
+                },
+              },
+            ],
           },
           legend: { display: false },
           title: {
@@ -39,7 +42,7 @@ function ColumnChart({ label, data }) {
         }}
       />
     </div>
-  );
+  )
 }
 
-export default ColumnChart;
+export default ColumnChart

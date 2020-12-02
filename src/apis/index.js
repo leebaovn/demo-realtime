@@ -3,7 +3,7 @@ import queryString from 'query-string'
 import firebase, { auth } from './../firebase'
 
 const axiosClient = axios.create({
-  baseURL: 'http://localhost:5001/realtime-demo-chart/asia-northeast1/api/',
+  baseURL: 'http://localhost:5001/realtime-demo-chart/asia-northeast1/api',
   headers: {
     'Content-Type': 'application/json',
   },

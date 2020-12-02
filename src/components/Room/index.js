@@ -196,6 +196,7 @@ function Room() {
               dataSource={rooms}
               columns={mergedColumns}
               pagination={false}
+              loading={loading}
             />
           </Form>
         </div>
