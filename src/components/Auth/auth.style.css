@@ -89,3 +89,24 @@
 .text-direct a:hover {
   text-decoration: underline;
 }
+
+.login-button{
+  background-color: #FFF;
+
+  outline: none;
+  border:none;
+
+  box-shadow: 0 1px 1px 1px #888888;
+
+  padding:4px 16px;
+
+  margin:0 auto;
+}
+
+.login-button:hover{
+  background-color: rgb(240,240,240);
+}
+.social-login{
+  width:100%;
+  text-align:center;
+}

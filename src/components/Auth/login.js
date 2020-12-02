@@ -1,40 +1,41 @@
-import React, { useEffect, useRef } from 'react';
-import './auth.style.css';
-import { Link, useHistory } from 'react-router-dom';
-import firebase, { auth } from './../../firebase';
+import React, { useEffect, useRef } from 'react'
+import './auth.style.css'
+import { Link, useHistory } from 'react-router-dom'
+import firebase, { auth } from './../../firebase'
+import { GoogleOutlined, GooglePlusOutlined } from '@ant-design/icons'
 function Login() {
-  const history = useHistory();
-  const emailRef = useRef('');
-  const pwdRef = useRef('');
+  const history = useHistory()
+  const emailRef = useRef('')
+  const pwdRef = useRef('')
 
   const handleLogin = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     firebase
       .auth()
       .signInWithEmailAndPassword(emailRef.current.value, pwdRef.current.value)
       .then((user) => {
-        console.log(user);
-        history.push('/');
+        history.push('/')
       })
       .catch((err) => {
-        console.log(err);
-      });
-  };
+        console.log(err)
+      })
+  }
 
   const handleGoogeLogin = async () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
+    const provider = new firebase.auth.GoogleAuthProvider()
     firebase
       .auth()
       .signInWithPopup(provider)
       .then(async (result) => {
-        localStorage.setItem('@token', token);
-        var token = result.credential.accessToken;
-        history.push('/');
+        // var token = result.credential.accessToken
+        // localStorage.setItem('@token', token)
+
+        history.push('/')
       })
       .catch((error) => {
-        console.log(`Error on signing in`, error);
-      });
-  };
+        console.log(`Error on signing in`, error)
+      })
+  }
   return (
     <div className='container'>
       <div className='box'>
@@ -56,15 +57,19 @@ function Login() {
             <input type='submit' value='Login' className='btn btn-default' />
           </div>
         </form>
-        <button onClick={handleGoogeLogin} className='login-button'>
-          LOGIN with Googe
-        </button>
+        <hr width='50%' />
+        <div className='social-login'>
+          <button onClick={handleGoogeLogin} className='login-button'>
+            <GooglePlusOutlined />
+            Sign in with Google
+          </button>
+        </div>
         <div className='text-direct'>
           Don't have an account ? <Link to='/signup'>Sign up now</Link>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default Login;
+export default Login

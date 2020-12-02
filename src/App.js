@@ -10,6 +10,7 @@ import Signup from './components/Auth/signin'
 import Room from './pages/Room'
 import RoomDetail from './pages/Room/room-detail'
 import Layout from './components/Layout'
+import Guest from './pages/Guest'
 const LIST_ANSWERS = ['A', 'B', 'C', 'D']
 
 const pairData = (arrData) => {
@@ -100,6 +101,9 @@ function App() {
     // </div>
     <Router>
       <Switch>
+        <Route path='/roomplay/:roomId'>
+          <Guest />
+        </Route>
         <Route path='/login'>
           <Login />
         </Route>

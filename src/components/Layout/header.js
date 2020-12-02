@@ -1,35 +1,37 @@
-import React, { useEffect, useState } from 'react';
-import './layout.style.css';
-import firebase, { auth } from './../../firebase';
-
+import React, { useEffect, useState } from 'react'
+import './layout.style.css'
+import firebase, { auth } from './../../firebase'
+import { Link, useHistory } from 'react-router-dom'
 function Header() {
-  const [username, setUsername] = useState('');
-  const [photoUrl, setPhotoUrl] = useState('');
+  const history = useHistory()
+  const [username, setUsername] = useState('')
+  const [photoUrl, setPhotoUrl] = useState('')
   useEffect(() => {
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
-        setPhotoUrl(user.photoURL);
-        setUsername(user.displayName);
+        setPhotoUrl(user.photoURL)
+        setUsername(user.displayName)
       } else {
-        console.log('not user');
+        history.push('/login')
       }
-    });
-  }, []);
+    })
+  }, [])
 
   const logout = () => {
-    firebase.auth().signOut();
-    localStorage.removeItem('@token');
-  };
+    firebase.auth().signOut()
+  }
   return (
     <div className='container-header'>
       <div className='wrapper'>
-        <div className='username'>{username}</div>
+        <div className='username'>
+          <img src={photoUrl} className='avatar' /> {username}
+        </div>
         <div className='logout' onClick={logout}>
           Log out
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default Header;
+export default Header
