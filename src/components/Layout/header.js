@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import './layout.style.css'
 import firebase, { auth } from './../../firebase'
+import { LogoutOutlined } from '@ant-design/icons'
 import { Link, useHistory } from 'react-router-dom'
+import { Button } from 'antd'
 function Header() {
   const history = useHistory()
   const [username, setUsername] = useState('')
@@ -27,7 +29,14 @@ function Header() {
           <img src={photoUrl} className='avatar' /> {username}
         </div>
         <div className='logout' onClick={logout}>
-          Log out
+          <Button
+            style={{ color: 'red', textTransform: 'uppercase' }}
+            type='dashed'
+            danger
+          >
+            Log out
+            <LogoutOutlined style={{ marginLeft: '0.5rem' }} />
+          </Button>
         </div>
       </div>
     </div>

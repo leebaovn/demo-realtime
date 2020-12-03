@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { Button, Input, Table, Form } from 'antd'
 import { Link } from 'react-router-dom'
 import './room.style.css'
@@ -6,16 +6,18 @@ import axios from './../../apis'
 import ModalCreate from './../Modal/create_room'
 import firebase from './../../firebase'
 import EditableCell from './../EditableCell'
-
+import roomContext from './../../contexts/room/room-context'
 import {
   EditOutlined,
   DeleteOutlined,
   SaveOutlined,
   CloseOutlined,
+  PlusOutlined,
 } from '@ant-design/icons'
 const { Search } = Input
 
 function Room() {
+  const [roomState, roomDispatch] = useContext(roomContext)
   const [form] = Form.useForm()
   const [visible, setVisible] = useState(false)
   const [rooms, setRooms] = useState([])
@@ -92,13 +94,21 @@ function Room() {
     }
   }
 
+  const handleChooseRoom = (room) => {
+    roomDispatch({ type: 'CHOOSE', payload: { data: room } })
+  }
+
   const columns = [
     {
       title: 'room-title',
       dataIndex: 'title',
       editable: true,
       render: (_, record) => {
-        return <Link to={`/${record.id}`}>{record.title}</Link>
+        return (
+          <Link to={`/${record.id}`} onClick={() => handleChooseRoom(record)}>
+            {record.title}
+          </Link>
+        )
       },
     },
     {
@@ -182,7 +192,10 @@ function Room() {
             onSearch={onSearch}
             style={{ width: 200, margin: '0' }}
           />
-          <Button onClick={() => setVisible(true)}>+Create room</Button>
+          <Button onClick={() => setVisible(true)} type='primary'>
+            <PlusOutlined />
+            Create room
+          </Button>
         </div>
         <div className='room-list'>
           <Form form={form} component={false}>

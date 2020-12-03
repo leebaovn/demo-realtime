@@ -1,9 +1,9 @@
 import axios from 'axios'
 import queryString from 'query-string'
-import firebase, { auth } from './../firebase'
+import firebase from './../firebase'
 
 const axiosClient = axios.create({
-  baseURL: 'http://localhost:5001/realtime-demo-chart/asia-northeast1/api',
+  baseURL: 'https://asia-northeast1-realtime-demo-chart.cloudfunctions.net/api',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -12,10 +12,13 @@ const axiosClient = axios.create({
 
 axiosClient.interceptors.request.use(async (config) => {
   //Process token here
-
-  const token = await firebase.auth().currentUser.getIdToken(true)
-  if (token) config.headers['Authorization'] = `Bearer ${token}`
-  return config
+  if (firebase.auth().currentUser) {
+    const token = await firebase.auth().currentUser.getIdToken(true)
+    if (token) config.headers['Authorization'] = `Bearer ${token}`
+    return config
+  } else {
+    return config
+  }
 })
 
 axiosClient.interceptors.response.use(

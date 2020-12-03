@@ -21,8 +21,9 @@
   transition: all 0.5s;
 }
 
-.wrapper .logout:hover {
+.wrapper .logout:hover button{
   color: #751926;
+  background-color: #f1f1f1;
 }
 
 .username {

@@ -1,13 +1,14 @@
-import React, { useRef } from 'react'
+import React, { useRef, useContext } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import axios from './../../apis'
 import './auth.style.css'
+import guestContext from './../../contexts/guest/guest-context'
 function Guest() {
   const history = useHistory()
   const { roomId } = useParams()
+  const [guestState, guestDispatch] = useContext(guestContext)
   const emailRef = useRef('')
   const nameRef = useRef('')
-
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
@@ -15,7 +16,10 @@ function Guest() {
         email: emailRef.current.value,
         displayName: nameRef.current.value,
       })
-      localStorage.setItem('guestId', newGuest.data)
+      guestDispatch({
+        type: 'LOGIN',
+        payload: { displayName: nameRef.current.value, guestId: newGuest.data },
+      })
       history.push(`/roomplay/${roomId}`)
     } catch (err) {
       console.log(err)
@@ -35,7 +39,7 @@ function Guest() {
             </div>
           </div>
           <div className='form-field'>
-            <div className='label'>Username</div>
+            <div className='label'>display name</div>
             <div className='input'>
               <input type='text' ref={nameRef} />
             </div>

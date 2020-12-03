@@ -9,6 +9,15 @@ function CreateQuestion({ visible, setVisible, createQuestion, loading }) {
   const ansBRef = useRef('')
   const ansCRef = useRef('')
   const ansDRef = useRef('')
+
+  const clearRef = () => {
+    questionRef.current.value = ''
+    restimeRef.current.value = ''
+    ansARef.current.value = ''
+    ansBRef.current.value = ''
+    ansCRef.current.value = ''
+    ansDRef.current.value = ''
+  }
   const handleOk = () => {
     const questionData = {
       question: questionRef.current.value,
@@ -19,8 +28,10 @@ function CreateQuestion({ visible, setVisible, createQuestion, loading }) {
       answerD: ansDRef.current.value,
     }
     createQuestion(questionData)
+    clearRef()
     setVisible(false)
   }
+
   return (
     <Modal
       title='Create question'
@@ -37,7 +48,16 @@ function CreateQuestion({ visible, setVisible, createQuestion, loading }) {
       </div>
       <div className='label'>Response time</div>
       <div className='input' style={{ width: '100%' }}>
-        <input type='number' ref={restimeRef} style={{ width: '100%' }} />
+        <input
+          type='number'
+          onKeyDown={(e) => {
+            if (e.key === 'e' || e.key === 'E') {
+              e.preventDefault()
+            }
+          }}
+          ref={restimeRef}
+          style={{ width: '100%' }}
+        />
       </div>
       <div className='label'>Answer A</div>
       <div className='input'>

@@ -29,9 +29,14 @@
 }
 
 .response-time{
-  padding:20px;
+  /* padding:20px; */
   font-weight: 500;
-  font-size: 2rem;
+  font-size: 1.5rem;
+  position:fixed;
+  top:20px;
+left:20px;
+  border:1px solid #000;
+  border-radius: 50%;
 }
 
 .question{
@@ -63,12 +68,13 @@
   cursor: pointer;
 
   box-shadow: 0 1px 1px 1px #aaa;
+
+  transition: all 0.5s;
 }
 
 .ans-item:hover{
   background-color: #f1f1f1;
 }
-
 
 
 

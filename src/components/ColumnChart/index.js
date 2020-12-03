@@ -1,6 +1,6 @@
 import React from 'react'
 import { Bar } from 'react-chartjs-2'
-function ColumnChart({ label, data }) {
+function ColumnChart({ label, data = {} }) {
   return (
     <div
       style={{
@@ -12,14 +12,13 @@ function ColumnChart({ label, data }) {
     >
       <Bar
         data={{
-          labels: label,
-          // labels: Object.keys(data),
+          labels: Object.keys(data),
           datasets: [
             {
               label: 'Total',
               backgroundColor: ['#3e95cd', '#8e5ea2', '#3cba9f', '#e8c3b9'],
               data: data,
-              // data: Object.keys(data).map((key) => data[key]),
+              data: Object.keys(data).map((key) => data[key]),
             },
           ],
         }}
@@ -28,6 +27,7 @@ function ColumnChart({ label, data }) {
             yAxes: [
               {
                 ticks: {
+                  min: 0,
                   beginAtZero: true,
                 },
               },
@@ -37,7 +37,7 @@ function ColumnChart({ label, data }) {
           title: {
             display: true,
             fontSize: 20,
-            text: 'Online Voting Results!',
+            text: 'Voting Results!',
           },
         }}
       />

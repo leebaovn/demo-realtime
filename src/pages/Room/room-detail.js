@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { Table, Form, Button } from 'antd'
+import React, { useEffect, useState, useContext } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import { Table, Form, Button, Modal } from 'antd'
 import EditableCell from './../../components/EditableCell'
 import firebase, { auth } from './../../firebase'
 import axios from './../../apis'
@@ -10,19 +10,25 @@ import {
   DeleteOutlined,
   SaveOutlined,
   CloseOutlined,
+  PlusOutlined,
+  ArrowLeftOutlined,
+  QrcodeOutlined,
 } from '@ant-design/icons'
+import QRCode from 'qrcode.react'
+import roomContext from './../../contexts/room/room-context'
+import tinyUrl from 'tinyurl'
 function RoomDetail() {
   const { id } = useParams()
   const [form] = Form.useForm()
+  const [{ room }, roomDispatch] = useContext(roomContext)
 
+  const roomTitle = room?.title
   //define state section
   const [questions, setQuestions] = useState([])
   const [editingKey, setEditingKey] = useState('')
   const [visible, setVisible] = useState(false)
   const [loading, setLoading] = useState(false)
-
   const isEditing = (record) => record.id === editingKey
-
   const fetchQuestions = async () => {
     setLoading(true)
     const question = await axios.get(`/question/${id}`)
@@ -108,7 +114,7 @@ function RoomDetail() {
 
   const columns = [
     {
-      title: 'Question',
+      title: '質問',
       dataIndex: 'question',
       editable: true,
       width: '14vw',
@@ -209,12 +215,53 @@ function RoomDetail() {
     }
   })
 
+  const exportQRCode = async () => {
+    const newUrl = await tinyUrl.shorten(
+      `https://realtime-demo-chart.web.app//roomplay/${id}/login`
+    )
+    Modal.info({
+      title: <p>{roomTitle}</p>,
+      centered: true,
+
+      content: (
+        <>
+          <QRCode level='H' size={256} value={newUrl} />
+          <a href={newUrl} target='_blank'>
+            {newUrl}
+          </a>
+        </>
+      ),
+      onOk() {},
+    })
+  }
+
   return (
     <div className='wrapper'>
       <div>
-        <Button onClick={() => setVisible(true)} style={{ margin: '1rem 0' }}>
-          +Create new question
-        </Button>
+        <div
+          style={{
+            margin: '1rem 0',
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+          }}
+        >
+          <Button
+            style={{ marginRight: 'auto', textTransform: 'uppercase' }}
+            type='dashed'
+          >
+            {room.title}
+          </Button>
+          <Button onClick={exportQRCode} style={{ marginRight: '1rem' }}>
+            <QrcodeOutlined />
+            Export QRCode
+          </Button>
+          <Button onClick={() => setVisible(true)} type='primary'>
+            <PlusOutlined />
+            Create new question
+          </Button>
+        </div>
         <Form form={form} component={false}>
           <Table
             components={{
@@ -229,6 +276,18 @@ function RoomDetail() {
             rowKey='id'
           />
         </Form>
+        <div style={{ width: '100%', textAlign: 'right' }}>
+          <Button
+            style={{ margin: '1rem 0', textTransform: 'uppercase' }}
+            type='dashed'
+            danger
+          >
+            <Link to='/'>
+              <ArrowLeftOutlined />
+              Back to home
+            </Link>
+          </Button>
+        </div>
       </div>
       <ModalCreate
         visible={visible}

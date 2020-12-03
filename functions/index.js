@@ -25,15 +25,15 @@ async function checkAuth(req, res, next) {
   }
 }
 
-app.use('/', checkAuth)
+// app.use('/', checkAuth)
 //require router
 const roomRouter = require('./modules/room/room.router')
 const questionRouter = require('./modules/questions/question.router')
 const guestRouter = require('./modules/guest/guest.router')
 const answerRouter = require('./modules/answers/answer.router')
 //define route
-app.use('/room', roomRouter)
-app.use('/question', questionRouter)
+app.use('/room', checkAuth, roomRouter)
+app.use('/question', checkAuth, questionRouter)
 app.use('/guest', guestRouter)
 app.use('/answer', answerRouter)
 

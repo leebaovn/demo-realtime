@@ -11,8 +11,14 @@
 
 .box {
   width: 30vw;
-
   background-color: #fff;
+ 
+}
+
+@media only screen and (max-width:420px){
+.box{
+  width: 60vw;
+}
 }
 
 .title {
@@ -109,4 +115,13 @@
 .social-login{
   width:100%;
   text-align:center;
+}
+
+.error{
+  font-weight: 500;
+  font-size: 1rem;
+
+  text-align: center;
+
+  color:#f50505;
 }

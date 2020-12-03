@@ -1,6 +1,8 @@
 import './App.css'
 import React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { GuestProvider } from './contexts/guest/guest-context'
+import { RoomProvider } from './contexts/room/room-context'
 
 import Login from './components/Auth/login'
 import Signup from './components/Auth/signin'
@@ -12,32 +14,36 @@ import GuestLogin from './components/Auth/guest_login'
 
 function App() {
   return (
-    <Router>
-      <Switch>
-        <Route path='/roomplay/:roomId/login'>
-          <GuestLogin />
-        </Route>
-        <Route path='/roomplay/:roomId'>
-          <Guest />
-        </Route>
-        <Route path='/login'>
-          <Login />
-        </Route>
-        <Route path='/signup'>
-          <Signup />
-        </Route>
-        <Route path='/:id'>
-          <Layout>
-            <RoomDetail />
-          </Layout>
-        </Route>
-        <Route path='/'>
-          <Layout>
-            <Room />
-          </Layout>
-        </Route>
-      </Switch>
-    </Router>
+    <GuestProvider>
+      <RoomProvider>
+        <Router>
+          <Switch>
+            <Route path='/roomplay/:roomId/login'>
+              <GuestLogin />
+            </Route>
+            <Route path='/roomplay/:roomId'>
+              <Guest />
+            </Route>
+            <Route path='/login'>
+              <Login />
+            </Route>
+            <Route path='/signup'>
+              <Signup />
+            </Route>
+            <Route path='/:id'>
+              <Layout>
+                <RoomDetail />
+              </Layout>
+            </Route>
+            <Route path='/'>
+              <Layout>
+                <Room />
+              </Layout>
+            </Route>
+          </Switch>
+        </Router>
+      </RoomProvider>
+    </GuestProvider>
   )
 }
 
