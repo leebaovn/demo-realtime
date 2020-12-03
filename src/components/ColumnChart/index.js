@@ -1,5 +1,6 @@
 import React from 'react'
 import { Bar } from 'react-chartjs-2'
+import { ANSWER_COLORS } from './../../utils'
 function ColumnChart({ label, data = {} }) {
   return (
     <div
@@ -16,7 +17,7 @@ function ColumnChart({ label, data = {} }) {
           datasets: [
             {
               label: 'Total',
-              backgroundColor: ['#3e95cd', '#8e5ea2', '#3cba9f', '#e8c3b9'],
+              backgroundColor: ANSWER_COLORS,
               data: data,
               data: Object.keys(data).map((key) => data[key]),
             },

@@ -46,7 +46,7 @@ function CreateQuestion({ visible, setVisible, createQuestion, loading }) {
       <div className='input' style={{ width: '100%' }}>
         <textarea ref={questionRef} style={{ width: '100%' }} />
       </div>
-      <div className='label'>Response time</div>
+      <div className='label'>Response time(s)</div>
       <div className='input' style={{ width: '100%' }}>
         <input
           type='number'

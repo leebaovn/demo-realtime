@@ -6,6 +6,8 @@
 .mobile-header{
   width:100%;
 
+  margin-top: 0.5rem;
+  
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -28,16 +30,40 @@
   cursor:pointer;
 }
 
-.response-time{
-  /* padding:20px; */
-  font-weight: 500;
-  font-size: 1.5rem;
-  position:fixed;
-  top:20px;
-left:20px;
-  border:1px solid #000;
-  border-radius: 50%;
+.response-time-section{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 1.5rem;
+  
 }
+
+.response-time{
+  font-size: 2rem;
+  font-weight: 600;
+
+  margin-left:1rem;
+  padding: 0.7rem 1.6rem;
+  
+  border-radius: 50%;
+  border:1px solid #333;
+
+  background-color: #03994c;
+  color:#FFF;
+}
+
+.ans-count{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  margin-right: 1rem;
+  font-size: 1.5rem;
+}
+
 
 .question{
   text-align: left;
@@ -61,9 +87,12 @@ left:20px;
   padding:8px 16px;
   margin:0.7rem 0;
 
+  color:#FFF;
+
   border:1px solid #f1f1f1;
   border-radius: 4px;
 
+  font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
 
@@ -75,6 +104,5 @@ left:20px;
 .ans-item:hover{
   background-color: #f1f1f1;
 }
-
 
 
