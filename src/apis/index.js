@@ -17,8 +17,17 @@ axiosClient.interceptors.request.use(async (config) => {
     if (token) config.headers['Authorization'] = `Bearer ${token}`
     return config
   } else {
-    return config
+    try {
+      const guestId = window.localStorage.getItem('guestId')
+      if (guestId) {
+        config.headers['guestId'] = guestId
+        return config
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
+  return config
 })
 
 axiosClient.interceptors.response.use(

@@ -1,20 +1,22 @@
-import React, {
-  useEffect,
-  useState,
-  useContext,
-  useCallback,
-  useRef,
-} from 'react'
+import React, { useEffect, useState, useContext, useCallback } from 'react'
 import './guest.style.css'
-import { Link, useParams, useHistory } from 'react-router-dom'
-import firebase, { firestore } from './../../firebase'
-import confetti from 'canvas-confetti'
+import { useParams, useHistory } from 'react-router-dom'
+import { firestore } from './../../firebase'
 import fireworks from 'fireworks'
 import ColumnChart from './../../components/ColumnChart'
-import { pairData, LIST_ANSWERS, ANSWER_COLORS } from './../../utils'
+import {
+  pairData,
+  LIST_ANSWERS,
+  ANSWER_COLORS,
+  configConfetti,
+  countAns,
+} from './../../utils'
 import guestContext from './../../contexts/guest/guest-context'
 import axios from './../../apis'
+import Confetti from 'react-dom-confetti'
 import { Button } from 'antd'
+import Confetti2 from 'react-confetti'
+
 function Guest() {
   const { roomId } = useParams()
   const history = useHistory()
@@ -25,47 +27,45 @@ function Guest() {
   const [currentQuestion, setcurrentQuestion] = useState({})
   const [answerList, setAnswerList] = useState([])
   const [timing, setTiming] = useState(Number)
+  const [loading, setLoading] = useState(false)
+  const [currentAns, setCurrentAns] = useState('')
   const clearData = () => {
-    setcurrentQuestion({})
-    setAnswerList([])
     setData([])
   }
-
-  const countAns = () => {
-    let totalCount = 0
-    for (const count in data) {
-      totalCount += data[count]
-    }
-    return totalCount
+  if (!window.localStorage.getItem('guestId')) {
+    history.push(`/roomplay/${roomId}/login`)
   }
 
   const handleAns = async (ans) => {
+    if (timing <= 0) return
+    if (currentAns) return
     const guestId = localStorage.getItem('guestId')
+    setCurrentAns(ans)
     await axios.post(`/answer/${currentQuestion.id}`, {
       answer: ans,
-      guestId,
     })
   }
   useEffect(() => {
     listenForShowQuestion()
   }, [])
+
   const listenForVoting = useCallback(async () => {
     if (currentQuestion.id) {
       answerRef.where('questionId', '==', currentQuestion.id || '').onSnapshot(
         (snapshot) => {
+          if (timing < 6) return
           snapshot.docChanges().forEach(async (change) => {
-            if (currentQuestion.id) {
-              if (change.doc.data().questionId === currentQuestion['id']) {
-                if (change.type === 'added') {
-                  const docAns = await answerRef
-                    .where('questionId', '==', currentQuestion.id || '')
-                    .get()
-                  const arrAns = docAns.docs.map((ans) => {
-                    return ans.data().answer
-                  })
-                  const resultArr = pairData(arrAns)
-                  setData(resultArr)
-                }
+            if (change.doc.data().questionId === currentQuestion['id']) {
+              if (change.type === 'added') {
+                console.log(change.doc.data())
+                const docAns = await answerRef
+                  .where('questionId', '==', currentQuestion.id || '')
+                  .get()
+                const arrAns = docAns.docs.map((ans) => {
+                  return ans.data().answer
+                })
+                const resultArr = pairData(arrAns)
+                setData(resultArr)
               }
             }
           })
@@ -94,6 +94,7 @@ function Guest() {
                 id: change.doc.id,
               })
               setData([])
+              setCurrentAns('')
               setAnswerList([answerA, answerB, answerC, answerD])
             }
           }
@@ -107,18 +108,29 @@ function Guest() {
   }, [currentQuestion])
 
   useEffect(() => {
+    if (timing < 6) {
+      clearData()
+    }
     const timingCount = setInterval(() => {
       setTiming((pre) => pre - 1)
     }, 1000)
-    if (timing === 0) clearInterval(timingCount)
+    if (timing === 0) {
+      clearInterval(timingCount)
+      setLoading(true)
+      setTimeout(() => {
+        setLoading(false)
+      }, 2000)
+    }
     return () => clearInterval(timingCount)
-  }, [])
+  }, [timing])
+
   const logout = () => {
     guestDispatch({ type: 'LOGOUT' })
     history.push(`/roomplay/${roomId}/login`)
   }
   return (
     <div className='mobile-wrapper'>
+      <Confetti2 numberOfPieces={400} recycle={loading} friction={1} />
       <div className='mobile-header'>
         <div className='display-name'>{displayName}</div>
         <div className='logout'>
@@ -128,11 +140,24 @@ function Guest() {
       <div className='chart'>
         <ColumnChart data={data} label={LIST_ANSWERS} />
       </div>
+      {!timing && <div className='message'>Please wait the host</div>}
       <div className='response-time-section'>
-        {currentQuestion.id && <div className='response-time'>{timing}</div>}
+        {currentQuestion.id && (
+          <div
+            className='response-time'
+            style={
+              timing <= 5
+                ? { backgroundColor: '#cc4747' }
+                : { backgroundColor: '#03994c' }
+            }
+          >
+            {timing}
+          </div>
+        )}
         <div className='image'></div>
+
         <div className='ans-count'>
-          <div className='count'>{countAns() || 0}</div>
+          <div className='count'>{countAns(data)}</div>
           <div>answers</div>
         </div>
       </div>
@@ -149,6 +174,10 @@ function Guest() {
               style={{ backgroundColor: ANSWER_COLORS[idx] }}
               onClick={() => handleAns(LIST_ANSWERS[idx])}
             >
+              {currentAns && LIST_ANSWERS[idx] !== currentAns && (
+                <div className='overlay'></div>
+              )}
+              <Confetti key={idx} active={currentAns} config={configConfetti} />
               {LIST_ANSWERS[idx]}. {ans}
             </li>
           ))}

@@ -1,4 +1,4 @@
-import React, { useRef, useContext } from 'react'
+import React, { useRef, useContext, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import axios from './../../apis'
 import './auth.style.css'
@@ -9,8 +9,13 @@ function Guest() {
   const [guestState, guestDispatch] = useContext(guestContext)
   const emailRef = useRef('')
   const nameRef = useRef('')
+  const [error, setError] = useState('')
   const handleLogin = async (e) => {
     e.preventDefault()
+    if (!emailRef.current.value && !nameRef.current.value) {
+      setError('You need to fill out')
+      return
+    }
     try {
       const newGuest = await axios.post(`/guest/${roomId}`, {
         email: emailRef.current.value,
@@ -20,6 +25,7 @@ function Guest() {
         type: 'LOGIN',
         payload: { displayName: nameRef.current.value, guestId: newGuest.data },
       })
+      setError('')
       history.push(`/roomplay/${roomId}`)
     } catch (err) {
       console.log(err)
@@ -47,6 +53,7 @@ function Guest() {
           <div className='btn-section' style={{ marginBottom: '1rem' }}>
             <input type='submit' value='Check in' className='btn btn-default' />
           </div>
+          <div className='error'>{error}</div>
         </form>
       </div>
     </div>

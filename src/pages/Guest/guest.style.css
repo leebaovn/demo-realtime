@@ -89,11 +89,14 @@
 
   color:#FFF;
 
+  position: relative;
+
   border:1px solid #f1f1f1;
   border-radius: 4px;
 
   font-weight: 600;
   font-size: 1rem;
+
   cursor: pointer;
 
   box-shadow: 0 1px 1px 1px #aaa;
@@ -105,4 +108,27 @@
   background-color: #f1f1f1;
 }
 
+.ans-item > .overlay{
+  position: absolute;
+  top:0;
+  left:0;
+  bottom:0;
+  right:0;
+  
+  background-color: rgba(0,0,0,0.7);
+
+  z-index: 5;
+
+  cursor: not-allowed;
+
+  transition: all 0.5s;
+}
+
+.message{
+  width: 100%;
+
+  text-align: center;
+
+  font-size: 1.2rem;
+}
 

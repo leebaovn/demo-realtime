@@ -217,7 +217,8 @@ function RoomDetail() {
 
   const exportQRCode = async () => {
     const newUrl = await tinyUrl.shorten(
-      `https://realtime-demo-chart.web.app//roomplay/${id}/login`
+      `http://localhost:3000/roomplay/${id}/login`
+      // `https://realtime-demo-chart.web.app/roomplay/${id}/login`
     )
     Modal.info({
       title: <p>{roomTitle}</p>,

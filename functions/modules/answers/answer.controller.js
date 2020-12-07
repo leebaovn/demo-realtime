@@ -3,7 +3,8 @@ const db = admin.firestore()
 
 exports.createAnswer = async (req, res) => {
   const { id } = req.params
-  const { answer, guestId } = req.body
+  const { guestId } = req
+  const { answer } = req.body
 
   const questionRef = db.collection('questions')
   const answerRef = db.collection('answer')

@@ -16,9 +16,9 @@ function ColumnChart({ label, data = {} }) {
           labels: Object.keys(data),
           datasets: [
             {
-              label: 'Total',
+              label: 'Total vote',
               backgroundColor: ANSWER_COLORS,
-              data: data,
+              // data: data,
               data: Object.keys(data).map((key) => data[key]),
             },
           ],
@@ -39,6 +39,10 @@ function ColumnChart({ label, data = {} }) {
             display: true,
             fontSize: 20,
             text: 'Voting Results!',
+          },
+          animation: {
+            duration: 0.5,
+            easing: 'linear',
           },
         }}
       />
