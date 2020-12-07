@@ -3,6 +3,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import axios from './../../apis'
 import './auth.style.css'
 import guestContext from './../../contexts/guest/guest-context'
+import notification, { typeNotificaton } from './../Notification'
 function Guest() {
   const history = useHistory()
   const { roomId } = useParams()
@@ -26,9 +27,11 @@ function Guest() {
         payload: { displayName: nameRef.current.value, guestId: newGuest.data },
       })
       setError('')
+
+      notification(typeNotificaton.success, 'You are logged in')
       history.push(`/roomplay/${roomId}`)
     } catch (err) {
-      console.log(err)
+      notification(typeNotificaton.error, 'Error occurs')
     }
   }
   return (

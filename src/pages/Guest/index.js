@@ -16,7 +16,7 @@ import axios from './../../apis'
 import Confetti from 'react-dom-confetti'
 import { Button } from 'antd'
 import Confetti2 from 'react-confetti'
-
+import notification, { typeNotificaton } from './../../components/Notification'
 function Guest() {
   const { roomId } = useParams()
   const history = useHistory()
@@ -39,11 +39,14 @@ function Guest() {
   const handleAns = async (ans) => {
     if (timing <= 0) return
     if (currentAns) return
-    const guestId = localStorage.getItem('guestId')
-    setCurrentAns(ans)
-    await axios.post(`/answer/${currentQuestion.id}`, {
-      answer: ans,
-    })
+    try {
+      setCurrentAns(ans)
+      await axios.post(`/answer/${currentQuestion.id}`, {
+        answer: ans,
+      })
+    } catch (err) {
+      notification(typeNotificaton.error, 'Error occurs')
+    }
   }
   useEffect(() => {
     listenForShowQuestion()
@@ -108,9 +111,9 @@ function Guest() {
   }, [currentQuestion])
 
   useEffect(() => {
-    if (timing < 6) {
-      clearData()
-    }
+    // if (timing < 6) {
+    //   clearData()
+    // }
     const timingCount = setInterval(() => {
       setTiming((pre) => pre - 1)
     }, 1000)
@@ -134,7 +137,7 @@ function Guest() {
       <div className='mobile-header'>
         <div className='display-name'>{displayName}</div>
         <div className='logout'>
-          <Button onClick={logout}>Log out</Button>
+          <Button onClick={logout}>ログアウト</Button>
         </div>
       </div>
       <div className='chart'>

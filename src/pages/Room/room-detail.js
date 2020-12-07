@@ -16,6 +16,7 @@ import {
 } from '@ant-design/icons'
 import QRCode from 'qrcode.react'
 import roomContext from './../../contexts/room/room-context'
+import notification, { typeNotificaton } from './../../components/Notification'
 import tinyUrl from 'tinyurl'
 function RoomDetail() {
   const { id } = useParams()
@@ -37,26 +38,40 @@ function RoomDetail() {
   }
   const createQuestion = async (questionData) => {
     setLoading(true)
-    if (questionData) {
-      const newQuestion = await axios.post(
-        `/question/create/${id}`,
-        questionData
-      )
-      setQuestions((pre) => [...pre, newQuestion.data])
+    try {
+      if (questionData) {
+        const newQuestion = await axios.post(
+          `/question/create/${id}`,
+          questionData
+        )
+        if (newQuestion) {
+          setQuestions((pre) => [...pre, newQuestion.data])
+          notification(typeNotificaton.success, 'Question created')
+        } else {
+          notification(typeNotificaton.error, 'Error occurs')
+        }
+      }
+    } catch (err) {
+      notification(typeNotificaton.error, 'Error occurs')
     }
 
     setLoading(false)
   }
 
   const deleteQuestion = async (id) => {
-    await axios.delete(`/question/${id}`)
-    const newData = [...questions]
-    const index = newData.findIndex((item) => id === item.id)
-    if (index > -1) {
-      newData.splice(index, 1)
-      setQuestions(newData)
-    } else {
-      setQuestions(newData)
+    try {
+      await axios.delete(`/question/${id}`)
+      const newData = [...questions]
+      const index = newData.findIndex((item) => id === item.id)
+      if (index > -1) {
+        newData.splice(index, 1)
+        setQuestions(newData)
+      } else {
+        setQuestions(newData)
+      }
+      notification(typeNotificaton.success, 'Question deleted')
+    } catch (err) {
+      notification(typeNotificaton.error, 'Error occurs')
     }
   }
 
@@ -85,7 +100,12 @@ function RoomDetail() {
   }
 
   const show = async (id) => {
-    await axios.post(`/question/${id}`)
+    try {
+      await axios.post(`/question/${id}`)
+      notification(typeNotificaton.success, 'Question showed')
+    } catch (err) {
+      notification(typeNotificaton.error, 'Error occurs')
+    }
   }
 
   const save = async (id) => {
@@ -107,8 +127,9 @@ function RoomDetail() {
         setQuestions(newData)
         setEditingKey('')
       }
+      notification(typeNotificaton.success, 'Question editted')
     } catch (errInfo) {
-      console.log('Validate Failed:', errInfo)
+      notification(typeNotificaton.error, 'Error occurs')
     }
   }
 
@@ -252,7 +273,7 @@ function RoomDetail() {
             style={{ marginRight: 'auto', textTransform: 'uppercase' }}
             type='dashed'
           >
-            {room.title}
+            {room?.title}
           </Button>
           <Button onClick={exportQRCode} style={{ marginRight: '1rem' }}>
             <QrcodeOutlined />
@@ -285,7 +306,7 @@ function RoomDetail() {
           >
             <Link to='/'>
               <ArrowLeftOutlined />
-              Back to home
+              バック
             </Link>
           </Button>
         </div>

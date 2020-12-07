@@ -26,7 +26,7 @@ function Header() {
     <div className='container-header'>
       <div className='wrapper'>
         <div className='username'>
-          <img src={photoUrl} className='avatar' /> {username}
+          {photoUrl && <img src={photoUrl} className='avatar' />} {username}
         </div>
         <div className='logout' onClick={logout}>
           <Button
@@ -34,7 +34,7 @@ function Header() {
             type='dashed'
             danger
           >
-            Log out
+            ログアウト
             <LogoutOutlined style={{ marginLeft: '0.5rem' }} />
           </Button>
         </div>

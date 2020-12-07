@@ -14,7 +14,7 @@ import {
   CloseOutlined,
   PlusOutlined,
 } from '@ant-design/icons'
-const { Search } = Input
+import notification, { typeNotificaton } from './../Notification'
 
 function Room() {
   const [roomState, roomDispatch] = useContext(roomContext)
@@ -23,7 +23,7 @@ function Room() {
   const [rooms, setRooms] = useState([])
   const [loading, setLoading] = useState(false)
   const [editingKey, setEditingKey] = useState('')
-  const onSearch = () => {}
+
   const isEditing = (record) => record.id === editingKey
   const fetchRoom = async () => {
     setLoading(true)
@@ -33,20 +33,34 @@ function Room() {
   }
   const createRoom = async (title, description) => {
     setLoading(true)
-    const newRoom = await axios.post('/room', { title, description })
-    setRooms((pre) => [...pre, newRoom.data])
+    try {
+      const newRoom = await axios.post('/room', { title, description })
+
+      console.log('before setroom')
+      setRooms((pre) => [...pre, newRoom.data])
+      console.log('after setroom')
+      notification(typeNotificaton.success, 'Room created')
+    } catch (err) {
+      notification(typeNotificaton.error, 'Error occurs when creating room!')
+    }
+
     setLoading(false)
   }
 
   const deleteQuestion = async (id) => {
-    await axios.delete(`/room/${id}`)
-    const newData = [...rooms]
-    const index = newData.findIndex((item) => id === item.id)
-    if (index > -1) {
-      newData.splice(index, 1)
-      setRooms(newData)
-    } else {
-      setRooms(newData)
+    try {
+      await axios.delete(`/room/${id}`)
+      const newData = [...rooms]
+      const index = newData.findIndex((item) => id === item.id)
+      if (index > -1) {
+        newData.splice(index, 1)
+        setRooms(newData)
+      } else {
+        setRooms(newData)
+      }
+      notification(typeNotificaton.success, 'Question deleted')
+    } catch (err) {
+      notification(typeNotificaton.error, 'Error occurs')
     }
   }
 
@@ -89,8 +103,9 @@ function Room() {
         setRooms(newData)
         setEditingKey('')
       }
+      notification(typeNotificaton.success, 'Room updated')
     } catch (errInfo) {
-      console.log('Validate Failed:', errInfo)
+      notification(typeNotificaton.error, 'Error occurs!')
     }
   }
 
@@ -100,7 +115,7 @@ function Room() {
 
   const columns = [
     {
-      title: 'room-title',
+      title: '題名',
       dataIndex: 'title',
       editable: true,
       render: (_, record) => {
@@ -112,7 +127,7 @@ function Room() {
       },
     },
     {
-      title: 'room-description',
+      title: '説明',
       dataIndex: 'description',
       editable: true,
     },
@@ -186,12 +201,13 @@ function Room() {
         }}
       >
         <div className='room-actions'>
-          <Search
+          {/* <Search
             placeholder='search your room'
-            allowClear
             onSearch={onSearch}
+
             style={{ width: 200, margin: '0' }}
-          />
+          /> */}
+          <div></div>
           <Button onClick={() => setVisible(true)} type='primary'>
             <PlusOutlined />
             Create room

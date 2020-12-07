@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Modal } from 'antd'
 import './../Auth/auth.style.css'
 
@@ -6,6 +6,14 @@ function CreateRoom({ visible, setVisible, createRoom, loading }) {
   const titleRef = useRef('')
   const desRef = useRef('')
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    console.log('imhere')
+
+    if (titleRef.current) {
+      titleRef.current.focus()
+    }
+  }, [])
   return (
     <Modal
       title='Create room'

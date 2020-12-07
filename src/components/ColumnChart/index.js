@@ -40,10 +40,6 @@ function ColumnChart({ label, data = {} }) {
             fontSize: 20,
             text: 'Voting Results!',
           },
-          animation: {
-            duration: 0.5,
-            easing: 'linear',
-          },
         }}
       />
     </div>

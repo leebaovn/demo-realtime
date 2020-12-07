@@ -1,23 +1,30 @@
-import React, { useRef } from 'react';
-import './auth.style.css';
-import { Link } from 'react-router-dom';
-import firebase, { auth } from './../../firebase';
-
+import React, { useRef } from 'react'
+import './auth.style.css'
+import { Link, useHistory } from 'react-router-dom'
+import firebase from './../../firebase'
+import notification, { typeNotificaton } from './../Notification'
 function Signin() {
-  const emailRef = useRef('');
-  const pwdRef = useRef('');
-  const confirmpwdRef = useRef('');
-  const usernameRef = useRef('');
+  const history = useHistory()
+  const emailRef = useRef('')
+  const pwdRef = useRef('')
+  const confirmpwdRef = useRef('')
+  const usernameRef = useRef('')
+  const clearRef = () => {
+    emailRef.current.value = ''
+    pwdRef.current.value = ''
+    confirmpwdRef.current.value = ''
+    usernameRef.current.value = ''
+  }
   const handleSignup = async (e) => {
-    const { value: pwd } = pwdRef.current;
-    const { value: email } = emailRef.current;
-    const { value: confirmpwd } = confirmpwdRef.current;
-    const { value: username } = usernameRef.current;
-    e.preventDefault();
+    const { value: pwd } = pwdRef.current
+    const { value: email } = emailRef.current
+    const { value: confirmpwd } = confirmpwdRef.current
+    const { value: username } = usernameRef.current
+    e.preventDefault()
     if (pwd !== confirmpwd) {
-      return;
+      return
     }
-    let userRegister = null;
+
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, pwd)
@@ -27,16 +34,19 @@ function Signin() {
             displayName: username,
           })
           .then((data) => {
-            console.log(userCredential.user.displayName);
+            history.push('/login')
+            notification(typeNotificaton.success, 'Sign up successfully')
+            clearRef()
           })
           .catch((err) => {
-            console.log(err, 'err');
-          });
+            notification(typeNotificaton.error, `Error occurs ${err}`)
+          })
       })
       .catch((err) => {
-        console.log(err);
-      });
-  };
+        notification(typeNotificaton.error, `Error occurs ${err}`)
+        console.log(err)
+      })
+  }
   return (
     <div className='container'>
       <div className='box'>
@@ -75,7 +85,7 @@ function Signin() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default Signin;
+export default Signin

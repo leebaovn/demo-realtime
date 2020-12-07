@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Modal } from 'antd'
 import './../Auth/auth.style.css'
 
@@ -9,6 +9,21 @@ function CreateQuestion({ visible, setVisible, createQuestion, loading }) {
   const ansBRef = useRef('')
   const ansCRef = useRef('')
   const ansDRef = useRef('')
+  const [error, setError] = useState(null)
+  const requireField = (fieldRef) => {
+    if (!fieldRef.current.value) {
+      fieldRef.current.focus()
+      setError('Pls fill out')
+      return
+    }
+  }
+
+  useEffect(() => {
+    console.log('imhere')
+    if (questionRef.current) {
+      questionRef.current.focus()
+    }
+  }, [])
 
   const clearRef = () => {
     questionRef.current.value = ''
@@ -19,6 +34,13 @@ function CreateQuestion({ visible, setVisible, createQuestion, loading }) {
     ansDRef.current.value = ''
   }
   const handleOk = () => {
+    // questionRef.current.focus()
+    requireField(questionRef)
+    requireField(restimeRef)
+    requireField(ansARef)
+    requireField(ansBRef)
+    requireField(ansCRef)
+    requireField(ansDRef)
     const questionData = {
       question: questionRef.current.value,
       responseTime: restimeRef.current.value,
@@ -27,9 +49,12 @@ function CreateQuestion({ visible, setVisible, createQuestion, loading }) {
       answerC: ansCRef.current.value,
       answerD: ansDRef.current.value,
     }
-    createQuestion(questionData)
-    clearRef()
-    setVisible(false)
+    if (!!error) {
+      createQuestion(questionData)
+      clearRef()
+      setError(null)
+      setVisible(false)
+    }
   }
 
   return (
@@ -42,6 +67,7 @@ function CreateQuestion({ visible, setVisible, createQuestion, loading }) {
       onCancel={() => setVisible(false)}
       width={450}
     >
+      <div className='error'>{error}</div>
       <div className='label'>Question</div>
       <div className='input' style={{ width: '100%' }}>
         <textarea ref={questionRef} style={{ width: '100%' }} />

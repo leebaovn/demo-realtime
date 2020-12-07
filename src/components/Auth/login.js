@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import './auth.style.css'
 import { Link, useHistory } from 'react-router-dom'
-import firebase, { auth } from './../../firebase'
-import { GoogleOutlined, GooglePlusOutlined } from '@ant-design/icons'
+import firebase from './../../firebase'
+import { GooglePlusOutlined } from '@ant-design/icons'
+import notification, { typeNotificaton } from './../Notification'
 function Login() {
   const history = useHistory()
   const emailRef = useRef('')
@@ -14,10 +15,11 @@ function Login() {
       .auth()
       .signInWithEmailAndPassword(emailRef.current.value, pwdRef.current.value)
       .then((user) => {
+        notification(typeNotificaton.success, 'You are logged in')
         history.push('/')
       })
       .catch((err) => {
-        console.log(err)
+        notification(typeNotificaton.error, `Error occurs: ${err}`)
       })
   }
 
@@ -29,11 +31,12 @@ function Login() {
       .then(async (result) => {
         // var token = result.credential.accessToken
         // localStorage.setItem('@token', token)
+        notification(typeNotificaton.success, 'You are logged in')
 
         history.push('/')
       })
       .catch((error) => {
-        console.log(`Error on signing in`, error)
+        notification(typeNotificaton.error, `Error occurs: ${error}`)
       })
   }
   return (
