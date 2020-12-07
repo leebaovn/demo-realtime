@@ -16,9 +16,9 @@
 }
 
 @media only screen and (max-width:420px){
-.box{
-  width: 60vw;
-}
+  .box{
+    width: 60vw;
+  }
 }
 
 .title {

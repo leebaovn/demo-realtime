@@ -19,7 +19,6 @@ function CreateQuestion({ visible, setVisible, createQuestion, loading }) {
   }
 
   useEffect(() => {
-    console.log('imhere')
     if (questionRef.current) {
       questionRef.current.focus()
     }
@@ -59,20 +58,21 @@ function CreateQuestion({ visible, setVisible, createQuestion, loading }) {
 
   return (
     <Modal
-      title='Create question'
+      title='質問の追加'
       visible={visible}
       onOk={handleOk}
       confirmLoading={loading}
-      okText='Create'
+      okText='追加'
+      cancelText='キャンセル'
       onCancel={() => setVisible(false)}
       width={450}
     >
       <div className='error'>{error}</div>
-      <div className='label'>Question</div>
+      <div className='label'>質問</div>
       <div className='input' style={{ width: '100%' }}>
         <textarea ref={questionRef} style={{ width: '100%' }} />
       </div>
-      <div className='label'>Response time(s)</div>
+      <div className='label'>返信時間(秒)</div>
       <div className='input' style={{ width: '100%' }}>
         <input
           type='number'
@@ -85,19 +85,19 @@ function CreateQuestion({ visible, setVisible, createQuestion, loading }) {
           style={{ width: '100%' }}
         />
       </div>
-      <div className='label'>Answer A</div>
+      <div className='label'>回答A</div>
       <div className='input'>
         <input type='text' ref={ansARef} style={{ width: '100%' }} />
       </div>
-      <div className='label'>Answer B</div>
+      <div className='label'>回答B</div>
       <div className='input'>
         <input type='text' ref={ansBRef} style={{ width: '100%' }} />
       </div>
-      <div className='label'>Answer C</div>
+      <div className='label'>回答C</div>
       <div className='input'>
         <input type='text' ref={ansCRef} style={{ width: '100%' }} />
       </div>
-      <div className='label'>Answer D</div>
+      <div className='label'>回答D</div>
       <div className='input'>
         <input type='text' ref={ansDRef} style={{ width: '100%' }} />
       </div>

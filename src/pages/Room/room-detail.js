@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { Table, Form, Button, Modal } from 'antd'
+import { Table, Form, Button, Modal, Tooltip } from 'antd'
 import EditableCell from './../../components/EditableCell'
-import firebase, { auth } from './../../firebase'
+import firebase, { firestore } from './../../firebase'
 import axios from './../../apis'
 import ModalCreate from './../../components/Modal/create_question'
 import {
@@ -22,7 +22,8 @@ function RoomDetail() {
   const { id } = useParams()
   const [form] = Form.useForm()
   const [{ room }, roomDispatch] = useContext(roomContext)
-
+  const roomRef = firestore.collection('room')
+  console.log(room, 'rrrrrrrrr')
   const roomTitle = room?.title
   //define state section
   const [questions, setQuestions] = useState([])
@@ -44,12 +45,8 @@ function RoomDetail() {
           `/question/create/${id}`,
           questionData
         )
-        if (newQuestion) {
-          setQuestions((pre) => [...pre, newQuestion.data])
-          notification(typeNotificaton.success, 'Question created')
-        } else {
-          notification(typeNotificaton.error, 'Error occurs')
-        }
+        setQuestions((pre) => [...pre, newQuestion.data])
+        notification(typeNotificaton.success, 'Question created')
       }
     } catch (err) {
       notification(typeNotificaton.error, 'Error occurs')
@@ -82,6 +79,24 @@ function RoomDetail() {
       }
     })
   }, [])
+
+  const listenForActiveUser = async () => {
+    // if (!!currentUserId) {
+    roomRef.doc(id).onSnapshot((snapshot) => {
+      const roomSnapshot = Object.assign({}, snapshot.data(), {
+        id: snapshot.id,
+      })
+      if (roomSnapshot) {
+        roomDispatch({ type: 'MODIFIED', payload: { data: roomSnapshot } })
+      }
+    })
+    // }
+  }
+
+  useEffect(() => {
+    listenForActiveUser()
+  }, [])
+
   const edit = (record) => {
     form.setFieldsValue({
       question: '',
@@ -175,45 +190,64 @@ function RoomDetail() {
       width: '14vw',
       editable: true,
     },
+
     {
-      title: 'Actions',
+      title: '行動',
       width: '20vw',
 
       render: (_, record) => {
         const editable = isEditing(record)
         return editable ? (
           <>
-            <Button
-              style={{ marginRight: '1rem' }}
-              onClick={cancel}
-              size='small'
-            >
-              <CloseOutlined />
-            </Button>
-            <Button type='primary' onClick={() => save(record.id)} size='small'>
-              <SaveOutlined />
-            </Button>
+            <Tooltip placement='top' title={'キャンセル'}>
+              <Button
+                style={{ marginRight: '1rem' }}
+                onClick={cancel}
+                size='small'
+              >
+                <CloseOutlined />
+              </Button>
+            </Tooltip>
+            <Tooltip placement='top' title={'OK'}>
+              <Button
+                type='primary'
+                onClick={() => save(record.id)}
+                size='small'
+              >
+                <SaveOutlined />
+              </Button>
+            </Tooltip>
           </>
         ) : (
           <>
-            <Button
-              style={{ marginRight: '1rem' }}
-              onClick={() => edit(record)}
-              size='small'
-            >
-              <EditOutlined />
-            </Button>
-            <Button
-              style={{ marginRight: '1rem' }}
-              onClick={() => deleteQuestion(record.id)}
-              danger
-              size='small'
-            >
-              <DeleteOutlined />
-            </Button>
-            <Button type='primary' size='small' onClick={() => show(record.id)}>
-              Show
-            </Button>
+            <Tooltip placement='top' title={'編集'}>
+              <Button
+                style={{ marginRight: '1rem' }}
+                onClick={() => edit(record)}
+                size='small'
+              >
+                <EditOutlined />
+              </Button>
+            </Tooltip>
+            <Tooltip placement='top' title={'削除'}>
+              <Button
+                style={{ marginRight: '1rem' }}
+                onClick={() => deleteQuestion(record.id)}
+                danger
+                size='small'
+              >
+                <DeleteOutlined />
+              </Button>
+            </Tooltip>
+            <Tooltip placement='top' title={'アンケートを始める'}>
+              <Button
+                type='primary'
+                size='small'
+                onClick={() => show(record.id)}
+              >
+                Show
+              </Button>
+            </Tooltip>
           </>
         )
       },
@@ -238,8 +272,8 @@ function RoomDetail() {
 
   const exportQRCode = async () => {
     const newUrl = await tinyUrl.shorten(
-      `http://localhost:3000/roomplay/${id}/login`
-      // `https://realtime-demo-chart.web.app/roomplay/${id}/login`
+      // `http://localhost:3000/roomplay/${id}/login`
+      `https://realtime-demo-chart.web.app/roomplay/${id}/login`
     )
     Modal.info({
       title: <p>{roomTitle}</p>,
@@ -281,9 +315,10 @@ function RoomDetail() {
           </Button>
           <Button onClick={() => setVisible(true)} type='primary'>
             <PlusOutlined />
-            Create new question
+            質問の追加
           </Button>
         </div>
+        <div>Active users: {room?.members.length}</div>
         <Form form={form} component={false}>
           <Table
             components={{
@@ -306,7 +341,7 @@ function RoomDetail() {
           >
             <Link to='/'>
               <ArrowLeftOutlined />
-              バック
+              戻る
             </Link>
           </Button>
         </div>

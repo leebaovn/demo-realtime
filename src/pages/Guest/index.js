@@ -37,7 +37,10 @@ function Guest() {
   }
 
   const handleAns = async (ans) => {
-    if (timing <= 0) return
+    if (timing <= 0) {
+      notification(typeNotificaton.error, 'Timeout')
+      return
+    }
     if (currentAns) return
     try {
       setCurrentAns(ans)
@@ -56,7 +59,7 @@ function Guest() {
     if (currentQuestion.id) {
       answerRef.where('questionId', '==', currentQuestion.id || '').onSnapshot(
         (snapshot) => {
-          if (timing < 6) return
+          // if (timing < 6) return
           snapshot.docChanges().forEach(async (change) => {
             if (change.doc.data().questionId === currentQuestion['id']) {
               if (change.type === 'added') {

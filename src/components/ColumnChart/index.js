@@ -1,16 +1,10 @@
 import React from 'react'
 import { Bar } from 'react-chartjs-2'
 import { ANSWER_COLORS } from './../../utils'
-function ColumnChart({ label, data = {} }) {
+import './chart.style.css'
+function ColumnChart({ data = {} }) {
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        margin: 'auto',
-        marginBottom: 30,
-      }}
-    >
+    <div className='wrap'>
       <Bar
         data={{
           labels: Object.keys(data),

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { Button, Input, Table, Form } from 'antd'
+import { Button, Table, Form, Tooltip } from 'antd'
 import { Link } from 'react-router-dom'
 import './room.style.css'
 import axios from './../../apis'
@@ -23,7 +23,6 @@ function Room() {
   const [rooms, setRooms] = useState([])
   const [loading, setLoading] = useState(false)
   const [editingKey, setEditingKey] = useState('')
-
   const isEditing = (record) => record.id === editingKey
   const fetchRoom = async () => {
     setLoading(true)
@@ -115,7 +114,7 @@ function Room() {
 
   const columns = [
     {
-      title: '題名',
+      title: 'アンケート名',
       dataIndex: 'title',
       editable: true,
       render: (_, record) => {
@@ -132,44 +131,57 @@ function Room() {
       editable: true,
     },
     {
-      title: 'number of questions',
+      title: '質問数',
       dataIndex: 'questions',
       render: (_, record) => record?.questions?.length || 0,
     },
+
     {
-      title: 'actions',
+      title: '行動',
       render: (_, record) => {
         const editable = isEditing(record)
         return editable ? (
           <>
-            <Button
-              style={{ marginRight: '1rem' }}
-              onClick={cancel}
-              size='small'
-            >
-              <CloseOutlined />
-            </Button>
-            <Button type='primary' onClick={() => save(record.id)} size='small'>
-              <SaveOutlined />
-            </Button>
+            <Tooltip placement='top' title={'キャンセル'}>
+              <Button
+                style={{ marginRight: '1rem' }}
+                onClick={cancel}
+                size='small'
+              >
+                <CloseOutlined />
+              </Button>
+            </Tooltip>
+            <Tooltip placement='top' title={'OK'}>
+              <Button
+                type='primary'
+                onClick={() => save(record.id)}
+                size='small'
+              >
+                <SaveOutlined />
+              </Button>
+            </Tooltip>
           </>
         ) : (
           <>
-            <Button
-              style={{ marginRight: '1rem' }}
-              onClick={() => edit(record)}
-              size='small'
-            >
-              <EditOutlined />
-            </Button>
-            <Button
-              style={{ marginRight: '1rem' }}
-              onClick={() => deleteQuestion(record.id)}
-              danger
-              size='small'
-            >
-              <DeleteOutlined />
-            </Button>
+            <Tooltip placement='top' title={'編集'}>
+              <Button
+                style={{ marginRight: '1rem' }}
+                onClick={() => edit(record)}
+                size='small'
+              >
+                <EditOutlined />
+              </Button>
+            </Tooltip>
+            <Tooltip placement='top' title={'削除'}>
+              <Button
+                style={{ marginRight: '1rem' }}
+                onClick={() => deleteQuestion(record.id)}
+                danger
+                size='small'
+              >
+                <DeleteOutlined />
+              </Button>
+            </Tooltip>
           </>
         )
       },
@@ -210,7 +222,7 @@ function Room() {
           <div></div>
           <Button onClick={() => setVisible(true)} type='primary'>
             <PlusOutlined />
-            Create room
+            アンケートの追加
           </Button>
         </div>
         <div className='room-list'>

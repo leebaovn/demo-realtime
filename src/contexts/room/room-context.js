@@ -15,6 +15,11 @@ function reducer(state, action) {
         ...state,
         room: action.payload.data,
       }
+    case 'MODIFIED':
+      return {
+        ...state,
+        room: action.payload.data,
+      }
     default:
       return state
   }

@@ -3,7 +3,7 @@ import Header from './header'
 function MainLayout({ children }) {
   return (
     <div className='layout'>
-      <Header username='Lee Bảo' />
+      <Header />
       <div className='content'>{children}</div>
     </div>
   )

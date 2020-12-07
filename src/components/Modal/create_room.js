@@ -8,15 +8,13 @@ function CreateRoom({ visible, setVisible, createRoom, loading }) {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    console.log('imhere')
-
     if (titleRef.current) {
       titleRef.current.focus()
     }
   }, [])
   return (
     <Modal
-      title='Create room'
+      title='アンケートの追加'
       visible={visible}
       onOk={() => {
         if (!titleRef.current.value || !desRef.current.value) {
@@ -35,12 +33,12 @@ function CreateRoom({ visible, setVisible, createRoom, loading }) {
       width={300}
     >
       <div className='error'>{error}</div>
-      <div className='label'>Title</div>
+      <div className='label'>アンケート名</div>
       <div className='input'>
         <input type='text' ref={titleRef} style={{ width: '100%' }} />
       </div>
       <div className='label' style={{ marginTop: '1rem' }}>
-        Desciption
+        説明
       </div>
       <div className='input'>
         <input type='text' ref={desRef} style={{ width: '100%' }} />
