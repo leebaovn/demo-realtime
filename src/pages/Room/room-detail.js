@@ -18,6 +18,7 @@ import QRCode from 'qrcode.react'
 import roomContext from './../../contexts/room/room-context'
 import notification, { typeNotificaton } from './../../components/Notification'
 import tinyUrl from 'tinyurl'
+import './room.style.css'
 function RoomDetail() {
   const { id } = useParams()
   const [form] = Form.useForm()
@@ -294,15 +295,7 @@ function RoomDetail() {
   return (
     <div className='wrapper'>
       <div>
-        <div
-          style={{
-            margin: '1rem 0',
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
-          }}
-        >
+        <div className='room-info'>
           <Button
             style={{ marginRight: 'auto', textTransform: 'uppercase' }}
             type='dashed'
@@ -318,7 +311,10 @@ function RoomDetail() {
             質問の追加
           </Button>
         </div>
-        <div>Active users: {room?.members.length}</div>
+        <div className='user-count'>
+          <span>{room?.members.length}</span>
+          ユーザがアンケートに参加しています。
+        </div>
         <Form form={form} component={false}>
           <Table
             components={{
