@@ -24,7 +24,6 @@ function RoomDetail() {
   const [form] = Form.useForm()
   const [{ room }, roomDispatch] = useContext(roomContext)
   const roomRef = firestore.collection('room')
-  console.log(room, 'rrrrrrrrr')
   const roomTitle = room?.title
   //define state section
   const [questions, setQuestions] = useState([])
@@ -273,7 +272,6 @@ function RoomDetail() {
 
   const exportQRCode = async () => {
     const newUrl = await tinyUrl.shorten(
-      // `http://localhost:3000/roomplay/${id}/login`
       `https://realtime-demo-chart.web.app/roomplay/${id}/login`
     )
     Modal.info({

@@ -35,9 +35,7 @@ function Room() {
     try {
       const newRoom = await axios.post('/room', { title, description })
 
-      console.log('before setroom')
       setRooms((pre) => [...pre, newRoom.data])
-      console.log('after setroom')
       notification(typeNotificaton.success, 'Room created')
     } catch (err) {
       notification(typeNotificaton.error, 'Error occurs when creating room!')

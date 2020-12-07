@@ -63,7 +63,6 @@ function Guest() {
           snapshot.docChanges().forEach(async (change) => {
             if (change.doc.data().questionId === currentQuestion['id']) {
               if (change.type === 'added') {
-                console.log(change.doc.data())
                 const docAns = await answerRef
                   .where('questionId', '==', currentQuestion.id || '')
                   .get()

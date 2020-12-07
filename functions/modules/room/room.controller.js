@@ -6,7 +6,7 @@ exports.getRoom = async (req, res) => {
   const roomSnapshot = await db
     .collection('room')
     .where('createdBy', '==', userId)
-    .orderBy(createdAt, 'desc')
+    // .orderBy('createdAt', 'desc')
     .get()
   const roomList = roomSnapshot.docs.map((room) => {
     return {
