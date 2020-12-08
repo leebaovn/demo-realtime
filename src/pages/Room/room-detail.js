@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { Table, Form, Button, Modal, Tooltip } from 'antd'
+import { Table, Form, Button, Modal, Tooltip, Popconfirm } from 'antd'
 import EditableCell from './../../components/EditableCell'
 import firebase, { firestore } from './../../firebase'
 import axios from './../../apis'
@@ -13,6 +13,7 @@ import {
   PlusOutlined,
   ArrowLeftOutlined,
   QrcodeOutlined,
+  QuestionCircleOutlined,
 } from '@ant-design/icons'
 import QRCode from 'qrcode.react'
 import roomContext from './../../contexts/room/room-context'
@@ -54,7 +55,6 @@ function RoomDetail() {
 
     setLoading(false)
   }
-
   const deleteQuestion = async (id) => {
     try {
       await axios.delete(`/question/${id}`)
@@ -229,16 +229,18 @@ function RoomDetail() {
                 <EditOutlined />
               </Button>
             </Tooltip>
-            <Tooltip placement='top' title={'削除'}>
-              <Button
-                style={{ marginRight: '1rem' }}
-                onClick={() => deleteQuestion(record.id)}
-                danger
-                size='small'
-              >
-                <DeleteOutlined />
-              </Button>
-            </Tooltip>
+            <Popconfirm
+              title='Wanna delete this question?'
+              cancelText='キャンセル'
+              icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+              onConfirm={() => deleteQuestion(record.id)}
+            >
+              <Tooltip placement='top' title={'削除'}>
+                <Button style={{ marginRight: '1rem' }} danger size='small'>
+                  <DeleteOutlined />
+                </Button>
+              </Tooltip>
+            </Popconfirm>
             <Tooltip placement='top' title={'アンケートを始める'}>
               <Button
                 type='primary'
@@ -323,7 +325,11 @@ function RoomDetail() {
             dataSource={questions}
             columns={mergedColumns}
             loading={loading}
-            pagination={false}
+            pagination={{
+              pageSize: 6,
+              hideOnSinglePage: true,
+              simple: true,
+            }}
             rowKey='id'
           />
         </Form>

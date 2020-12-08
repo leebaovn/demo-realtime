@@ -12,8 +12,6 @@
     "chart.js": "^2.9.4",
     "dotenv": "^8.2.0",
     "firebase": "^8.1.1",
-    "fireworks": "^2.2.6",
-    "fireworks-react": "^1.0.12",
     "jsonwebtoken": "^8.5.1",
     "qrcode.react": "^1.0.0",
     "react": "^17.0.1",

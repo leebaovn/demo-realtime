@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import './layout.style.css'
-import firebase, { auth } from './../../firebase'
+import firebase from './../../firebase'
 import { LogoutOutlined } from '@ant-design/icons'
-import { Link, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { Button } from 'antd'
 function Header() {
   const history = useHistory()

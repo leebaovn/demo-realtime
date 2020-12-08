@@ -39,12 +39,12 @@ function CreateQuestion({ visible, setVisible, createQuestion, loading }) {
 
   const handleOk = () => {
     // questionRef.current.focus()
-    requireField(questionRef)
-    requireField(restimeRef)
-    requireField(ansARef)
-    requireField(ansBRef)
-    requireField(ansCRef)
-    requireField(ansDRef)
+    // requireField(questionRef)
+    // requireField(restimeRef)
+    // requireField(ansARef)
+    // requireField(ansBRef)
+    // requireField(ansCRef)
+    // requireField(ansDRef)
     const questionData = {
       question: questionRef.current.value,
       responseTime: restimeRef.current.value,
@@ -53,11 +53,11 @@ function CreateQuestion({ visible, setVisible, createQuestion, loading }) {
       answerC: ansCRef.current.value,
       answerD: ansDRef.current.value,
     }
-    if (!!error) {
-      createQuestion(questionData)
-      clearRef()
-      onClose()
-    }
+    // if (!!error) {
+    createQuestion(questionData)
+    clearRef()
+    onClose()
+    // }
   }
 
   return (

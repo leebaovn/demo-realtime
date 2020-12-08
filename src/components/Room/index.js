@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { Button, Table, Form, Tooltip } from 'antd'
+import { Button, Table, Form, Tooltip, Popconfirm } from 'antd'
 import { Link } from 'react-router-dom'
 import './room.style.css'
 import axios from './../../apis'
@@ -13,6 +13,7 @@ import {
   SaveOutlined,
   CloseOutlined,
   PlusOutlined,
+  QuestionCircleOutlined,
 } from '@ant-design/icons'
 import notification, { typeNotificaton } from './../Notification'
 
@@ -44,7 +45,7 @@ function Room() {
     setLoading(false)
   }
 
-  const deleteQuestion = async (id) => {
+  const deleteRoom = async (id) => {
     try {
       await axios.delete(`/room/${id}`)
       const newData = [...rooms]
@@ -55,7 +56,7 @@ function Room() {
       } else {
         setRooms(newData)
       }
-      notification(typeNotificaton.success, 'Question deleted')
+      notification(typeNotificaton.success, 'Room deleted')
     } catch (err) {
       notification(typeNotificaton.error, 'Error occurs')
     }
@@ -170,16 +171,18 @@ function Room() {
                 <EditOutlined />
               </Button>
             </Tooltip>
-            <Tooltip placement='top' title={'削除'}>
-              <Button
-                style={{ marginRight: '1rem' }}
-                onClick={() => deleteQuestion(record.id)}
-                danger
-                size='small'
-              >
-                <DeleteOutlined />
-              </Button>
-            </Tooltip>
+            <Popconfirm
+              title={'Wanna delete this room ?'}
+              cancelText='キャンセル'
+              icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+              onConfirm={() => deleteRoom(record.id)}
+            >
+              <Tooltip placement='top' title={'削除'}>
+                <Button style={{ marginRight: '1rem' }} danger size='small'>
+                  <DeleteOutlined />
+                </Button>
+              </Tooltip>
+            </Popconfirm>
           </>
         )
       },
@@ -211,12 +214,6 @@ function Room() {
         }}
       >
         <div className='room-actions'>
-          {/* <Search
-            placeholder='search your room'
-            onSearch={onSearch}
-
-            style={{ width: 200, margin: '0' }}
-          /> */}
           <div></div>
           <Button onClick={() => setVisible(true)} type='primary'>
             <PlusOutlined />
@@ -234,7 +231,11 @@ function Room() {
               rowKey='id'
               dataSource={rooms}
               columns={mergedColumns}
-              pagination={false}
+              pagination={{
+                pageSize: 6,
+                hideOnSinglePage: true,
+                simple: true,
+              }}
               loading={loading}
             />
           </Form>

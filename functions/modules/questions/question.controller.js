@@ -127,7 +127,7 @@ exports.updateQuestion = async (req, res) => {
 
 exports.deleteQuestion = async (req, res) => {
   try {
-    const { id } = req.params
+    const { id } = req.params //question Id
     const { userId } = req
     const questionRef = db.collection('questions')
     const roomRef = db.collection('room')
@@ -140,12 +140,21 @@ exports.deleteQuestion = async (req, res) => {
     if (!roomData.id) {
       return res.status(403).send('Room not found')
     }
-    const { createdBy } = roomData.data()
+    const { createdBy, questions } = roomData.data()
     if (createdBy !== userId) {
       return res.status(403).send('Unauthorized')
     }
+    const deleteIndex = questions.findIndex((item) => item === id)
+    if (deleteIndex < 0) {
+      return res.status(403).send('Question not found in room')
+    }
+    const newQuestionArr = [...questions]
+    newQuestionArr.splice(deleteIndex, 1)
     await questionRef.doc(id).delete()
-    return res.send(200)
+    await roomRef.doc(roomId).update({
+      questions: newQuestionArr,
+    })
+    return res.sendStatus(200)
   } catch (err) {
     console.log(err)
   }

@@ -2,7 +2,6 @@ import React, { useEffect, useState, useContext, useCallback } from 'react'
 import './guest.style.css'
 import { useParams, useHistory } from 'react-router-dom'
 import { firestore } from './../../firebase'
-import fireworks from 'fireworks'
 import ColumnChart from './../../components/ColumnChart'
 import {
   pairData,

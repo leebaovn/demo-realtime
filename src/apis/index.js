@@ -4,6 +4,7 @@ import firebase from './../firebase'
 
 const axiosClient = axios.create({
   baseURL: 'https://asia-northeast1-realtime-demo-chart.cloudfunctions.net/api',
+  // baseURL: 'http://localhost:5001/realtime-demo-chart/asia-northeast1/api',
   headers: {
     'Content-Type': 'application/json',
   },
