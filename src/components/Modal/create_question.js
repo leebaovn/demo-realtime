@@ -10,15 +10,9 @@ function CreateQuestion({ visible, setVisible, createQuestion, loading }) {
   const ansCRef = useRef('')
   const ansDRef = useRef('')
   const [error, setError] = useState(null)
-  const requireField = (fieldRef) => {
-    if (!fieldRef.current.value) {
-      fieldRef.current.focus()
-      setError('Pls fill out')
-      return
-    }
-  }
+
   useEffect(() => {
-    if (questionRef.current) {
+    if (visible) {
       questionRef.current.focus()
     }
   }, [visible])
@@ -38,13 +32,37 @@ function CreateQuestion({ visible, setVisible, createQuestion, loading }) {
   }
 
   const handleOk = () => {
-    // questionRef.current.focus()
-    // requireField(questionRef)
-    // requireField(restimeRef)
-    // requireField(ansARef)
-    // requireField(ansBRef)
-    // requireField(ansCRef)
-    // requireField(ansDRef)
+    if (!questionRef.current.value) {
+      questionRef.current.focus()
+      setError('Pls fill out')
+      return
+    }
+    if (!restimeRef.current.value) {
+      restimeRef.current.focus()
+      setError('Pls fill out')
+      return
+    }
+    if (!ansARef.current.value) {
+      ansARef.current.focus()
+      setError('Pls fill out')
+      return
+    }
+    if (!ansBRef.current.value) {
+      ansBRef.current.focus()
+      setError('Pls fill out')
+      return
+    }
+    if (!ansCRef.current.value) {
+      ansCRef.current.focus()
+      setError('Pls fill out')
+      return
+    }
+    if (!ansDRef.current.value) {
+      ansDRef.current.focus()
+      setError('Pls fill out')
+      return
+    }
+
     const questionData = {
       question: questionRef.current.value,
       responseTime: restimeRef.current.value,
@@ -53,11 +71,13 @@ function CreateQuestion({ visible, setVisible, createQuestion, loading }) {
       answerC: ansCRef.current.value,
       answerD: ansDRef.current.value,
     }
-    // if (!!error) {
+
     createQuestion(questionData)
-    clearRef()
-    onClose()
-    // }
+    if (!loading) {
+      clearRef()
+      onClose()
+    }
+    setError('')
   }
 
   return (
@@ -65,6 +85,7 @@ function CreateQuestion({ visible, setVisible, createQuestion, loading }) {
       title='質問の追加'
       visible={visible}
       onOk={handleOk}
+      loading={loading}
       confirmLoading={loading}
       okText='追加'
       cancelText='キャンセル'

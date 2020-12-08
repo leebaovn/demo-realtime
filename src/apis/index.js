@@ -14,11 +14,13 @@ const axiosClient = axios.create({
 axiosClient.interceptors.request.use(async (config) => {
   //Process token here
   if (firebase.auth().currentUser) {
+    //User
     const token = await firebase.auth().currentUser.getIdToken(true)
     if (token) config.headers['Authorization'] = `Bearer ${token}`
     return config
   } else {
     try {
+      //Guest
       const guestId = window.localStorage.getItem('guestId')
       if (guestId) {
         config.headers['guestId'] = guestId

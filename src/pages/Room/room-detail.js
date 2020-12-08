@@ -350,6 +350,7 @@ function RoomDetail() {
         visible={visible}
         setVisible={setVisible}
         createQuestion={createQuestion}
+        loading={loading}
       />
     </div>
   )
