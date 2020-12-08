@@ -31,6 +31,7 @@ function RoomDetail() {
   const [editingKey, setEditingKey] = useState('')
   const [visible, setVisible] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [currentShow, setCurrentShow] = useState('')
   const isEditing = (record) => record.id === editingKey
   const fetchQuestions = async () => {
     setLoading(true)
@@ -245,7 +246,11 @@ function RoomDetail() {
               <Button
                 type='primary'
                 size='small'
-                onClick={() => show(record.id)}
+                disabled={record.id === currentShow}
+                onClick={() => {
+                  setCurrentShow(record.id)
+                  show(record.id)
+                }}
               >
                 Show
               </Button>

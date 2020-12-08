@@ -29,8 +29,6 @@ function Login() {
       .auth()
       .signInWithPopup(provider)
       .then(async (result) => {
-        // var token = result.credential.accessToken
-        // localStorage.setItem('@token', token)
         notification(typeNotificaton.success, 'You are logged in')
 
         history.push('/')

@@ -44,7 +44,6 @@ function Signin() {
       })
       .catch((err) => {
         notification(typeNotificaton.error, `Error occurs ${err}`)
-        console.log(err)
       })
   }
   return (
