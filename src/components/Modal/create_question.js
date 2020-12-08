@@ -17,12 +17,11 @@ function CreateQuestion({ visible, setVisible, createQuestion, loading }) {
       return
     }
   }
-
   useEffect(() => {
     if (questionRef.current) {
       questionRef.current.focus()
     }
-  }, [])
+  }, [visible])
 
   const clearRef = () => {
     questionRef.current.value = ''
@@ -32,6 +31,12 @@ function CreateQuestion({ visible, setVisible, createQuestion, loading }) {
     ansCRef.current.value = ''
     ansDRef.current.value = ''
   }
+
+  const onClose = () => {
+    setError(null)
+    setVisible(false)
+  }
+
   const handleOk = () => {
     // questionRef.current.focus()
     requireField(questionRef)
@@ -51,8 +56,7 @@ function CreateQuestion({ visible, setVisible, createQuestion, loading }) {
     if (!!error) {
       createQuestion(questionData)
       clearRef()
-      setError(null)
-      setVisible(false)
+      onClose()
     }
   }
 
@@ -64,7 +68,7 @@ function CreateQuestion({ visible, setVisible, createQuestion, loading }) {
       confirmLoading={loading}
       okText='追加'
       cancelText='キャンセル'
-      onCancel={() => setVisible(false)}
+      onCancel={onClose}
       width={450}
     >
       <div className='error'>{error}</div>

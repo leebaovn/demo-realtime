@@ -7,29 +7,41 @@ function CreateRoom({ visible, setVisible, createRoom, loading }) {
   const desRef = useRef('')
   const [error, setError] = useState('')
 
+  const clearRef = () => {
+    titleRef.current.value = ''
+    desRef.current.value = ''
+  }
+
+  const onClose = () => {
+    setVisible(false)
+    setError('')
+  }
+
+  const handleOk = () => {
+    if (!titleRef.current.value || !desRef.current.value) {
+      setError('You need to fill out information')
+      titleRef.current.focus()
+      return
+    }
+    createRoom(titleRef.current.value, desRef.current.value)
+    clearRef()
+    onClose()
+  }
+
   useEffect(() => {
     if (titleRef.current) {
       titleRef.current.focus()
     }
-  }, [])
+  }, [visible])
   return (
     <Modal
       title='アンケートの追加'
+      okText='追 加'
+      cancelText='キャンセル'
       visible={visible}
-      onOk={() => {
-        if (!titleRef.current.value || !desRef.current.value) {
-          setError('You need to fill out information')
-          return
-        }
-        setError('')
-        createRoom(titleRef.current.value, desRef.current.value)
-        titleRef.current.value = ''
-        desRef.current.value = ''
-        setVisible(false)
-      }}
+      onCancel={onClose}
+      onOk={handleOk}
       confirmLoading={loading}
-      okText='Create'
-      onCancel={() => setVisible(false)}
       width={300}
     >
       <div className='error'>{error}</div>
