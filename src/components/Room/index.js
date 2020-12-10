@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import './room.style.css'
 import axios from './../../apis'
 import ModalCreate from './../Modal/create_room'
-import firebase from './../../firebase'
+import firebase, { performance } from './../../firebase'
 import EditableCell from './../EditableCell'
 import roomContext from './../../contexts/room/room-context'
 import {
@@ -19,6 +19,7 @@ import notification, { typeNotificaton } from './../Notification'
 
 function Room() {
   const [roomState, roomDispatch] = useContext(roomContext)
+  const createRoomTracking = performance.trace('createRoom')
   const [form] = Form.useForm()
   const [visible, setVisible] = useState(false)
   const [rooms, setRooms] = useState([])
@@ -33,6 +34,7 @@ function Room() {
   }
   const createRoom = async (title, description) => {
     setLoading(true)
+    createRoomTracking.start()
     try {
       const newRoom = await axios.post('/room', { title, description })
 
@@ -41,6 +43,7 @@ function Room() {
     } catch (err) {
       notification(typeNotificaton.error, 'Error occurs when creating room!')
     }
+    createRoomTracking.stop()
 
     setLoading(false)
   }

@@ -26,7 +26,8 @@ function Header() {
     <div className='container-header'>
       <div className='wrapper'>
         <div className='username'>
-          {photoUrl && <img src={photoUrl} className='avatar' />} {username}
+          {photoUrl && <img src={photoUrl} className='avatar' alt='avatar' />}
+          {username}
         </div>
         <div className='logout' onClick={logout}>
           <Button

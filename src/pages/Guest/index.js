@@ -28,9 +28,9 @@ function Guest() {
   const [timing, setTiming] = useState(Number)
   const [loading, setLoading] = useState(false)
   const [currentAns, setCurrentAns] = useState('')
-  const clearData = () => {
-    setData([])
-  }
+  // const clearData = () => {
+  //   setData([])
+  // }
   if (!window.localStorage.getItem('guestId')) {
     history.push(`/roomplay/${roomId}/login`)
   }

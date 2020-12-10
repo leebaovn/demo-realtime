@@ -1,6 +1,7 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/auth'
+import 'firebase/performance'
 var firebaseConfig = {
   apiKey: 'AIzaSyAMzMXAZpb7ZYFBm-ZO5-NcxpB9Ahtrex4',
   authDomain: 'realtime-demo-chart.firebaseapp.com',
@@ -15,4 +16,6 @@ firebase.initializeApp(firebaseConfig)
 const firestore = firebase.firestore()
 const auth = firebase.auth()
 
-export { auth, firestore, firebase as default }
+const performance = firebase.performance()
+
+export { performance, auth, firestore, firebase as default }

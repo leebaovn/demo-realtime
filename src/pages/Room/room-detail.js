@@ -250,6 +250,9 @@ function RoomDetail() {
                 onClick={() => {
                   setCurrentShow(record.id)
                   show(record.id)
+                  setTimeout(() => {
+                    setCurrentShow('')
+                  }, 10 * 1000)
                 }}
               >
                 Show
@@ -288,7 +291,7 @@ function RoomDetail() {
       content: (
         <>
           <QRCode level='H' size={256} value={newUrl} />
-          <a href={newUrl} target='_blank'>
+          <a href={newUrl} target='_blank' rel='noreferrer'>
             {newUrl}
           </a>
         </>
